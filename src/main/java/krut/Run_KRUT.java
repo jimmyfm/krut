@@ -73,6 +73,32 @@ import krut.KRUT_Recording.*;
  *  that is done after is caused by the event and action listeners.
  */
 public class Run_KRUT implements ActionListener, ItemListener {
+
+    private class OpenUrlActionListener implements ActionListener {
+
+        private URI uri;
+
+        public OpenUrlActionListener(String url) {
+            try {
+                this.uri = new URI(url);
+            } catch (URISyntaxException e) {
+                // TODO: LOG
+                e.printStackTrace();
+            }
+        }
+
+        public void actionPerformed(ActionEvent actionEvent) {
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(uri);
+                } catch (Exception e) {
+                    // TODO: LOG
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     
     /** Newline String for the OutputWindow. */
     protected String newline = "\n";
@@ -437,7 +463,21 @@ public class Run_KRUT implements ActionListener, ItemListener {
                 KeyEvent.VK_0, ActionEvent.ALT_MASK));
         menuItem.addActionListener(this);
         menu.add(menuItem);
-                
+
+        menu.addSeparator();
+
+        menuItem = new JMenuItem("Request Feature");
+        menuItem.addActionListener(new OpenUrlActionListener("https://sourceforge.net/p/krut/feature-requests/"));
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("Report Bug");
+        menuItem.addActionListener(new OpenUrlActionListener("https://sourceforge.net/p/krut/bugs/"));
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("GitHub Page");
+        menuItem.addActionListener(new OpenUrlActionListener("https://github.com/jimmyfm/krut"));
+        menu.add(menuItem);
+
         return menuBar;
     }
     
