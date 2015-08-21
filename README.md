@@ -2,6 +2,8 @@
 
 Krut Computer Recorder
 
+[![Download Krut Computer Recorder](https://img.shields.io/sourceforge/dw/krut.svg)](https://sourceforge.net/projects/krut/files/latest/download)
+
 - [Running Krut on Windows](#running-krut-on-windows)
 - [Video recording](#video-recording)
 - [Sound Recording](#sound-recording)
