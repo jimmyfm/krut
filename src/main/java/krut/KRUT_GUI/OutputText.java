@@ -126,7 +126,7 @@ public class OutputText  {
         
         /** Display the window. */
         outFrame.setSize(450, 260);
-        outFrame.setVisible(true);
+        outFrame.setVisible(false);
         inited = true;
         /** In case there are any threads waiting for this window
          *  to be initiated, they are now woken.
