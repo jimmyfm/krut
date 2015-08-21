@@ -20,7 +20,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.imageio.*;
 import java.net.*;
-import com.sun.image.codec.jpeg.*;
+
+import krut.Migration.JPEGCodec;
+import krut.Migration.JPEGEncodeParam;
+import krut.Migration.JPEGImageEncoder;
 
 /** This class is used both to record a movie and to take
  *  separate screen shots. The movie is recorded into a temporary
