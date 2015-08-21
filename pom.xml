@@ -7,6 +7,11 @@
     <groupId>sourceforge.net</groupId>
     <artifactId>krut</artifactId>
     <version>0.9.4</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <jdk.version>1.5</jdk.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -15,5 +20,36 @@
             <version>2.1.1e</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- Set a JDK compiler level -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Make this jar executable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>krut.Run_KRUT</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
