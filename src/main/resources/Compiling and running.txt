@@ -1,0 +1,11 @@
+To compile and run Krut, start by extracting the contents of this zip-file to a new folder.
+
+To compile the source code, the file jmf.jar must be included in the classpath. To obtain the file, download a version of krut other than the pure source code version, and copy the folder jmf into the folder where the contents of this zip-file have been extracted. An alternative way to obtain the file jmf.jar is to follow the information on http://java.sun.com/javase/technologies/desktop/media/jmf/index.jsp.
+
+Open a console (command prompt), and go to the folder where the contents of this zip-file were extracted. To clarify: There should be a folder named "krut" in the folder where you now stand.
+
+Assuming the file jmf.jar is placed in the path /jmf/lib/jmf.jar relative to the folder where you now stand, to compile Krut, type:
+<Path to javac executable>javac -cp ./jmf/lib/jmf.jar;. ./krut/Run_KRUT.java
+
+After that, to run the compiled program, type:
+java -cp ./jmf/lib/jmf.jar;. krut.Run_KRUT.java

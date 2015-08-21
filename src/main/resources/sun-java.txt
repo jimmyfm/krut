@@ -1,0 +1,140 @@
+These are instruction for installing Sun Java on a machine running ubuntu. See the readme file for other information.
+
+
+
+Before you start doing anything, please notice that your system might be completely correctly set up, but if you try running a jar file (like KRUT.jar for instance) through using the mouse in ubuntu, you might still get the wrong java running it. To make sure you're not messing with your system unneccesarily, open a terminal window (Applications > Terminal), move to the directory where you have extracted your KRUT zip archive (move using "cd directory-name", or "cd .." - to go up in the hierarchy), and try running krut by entering:
+
+	java -jar KRUT.jar
+
+(Notice that the capitalized letters are necessary)
+
+If things still don't work, procede through the text below. Notice that if you get the error message in the file "jmf-error.txt", that is part of this archive, there is a likely chance that your problem is with the JMF, and not the java version, so you should not have to bother with this file. See the readme-file.
+
+
+
+Installing Suns Java
+
+You need to have Suns Java on your machine before you can run krut. It might work with other versions of Java as well, but most likely not. Krut has only been tested using Suns Java. You need to use Java 1.5.0 or higher.
+
+To see your version of Java, open a terminal window (Applications > Terminal), and type:
+
+	java -version
+
+The response should be something along the lines of:
+
+	java version "1.5.0_07"
+	Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)
+	Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)
+
+Actual version numbers will differ. If your version number is lower than 1.5.0, krut will not run, and you need to install a new version of Suns Java (getting to that in a second). If you see something that doesnt really match what you see above (like the word "blackdown" for instance), chances are you're not set up with the required version of java.
+
+If you're positive you've installed a proper version of Suns Java, and it doesn't show up when you go through the step above, try typing:
+
+	sudo update-alternatives --config java
+
+You now need to type your password in. After you've typed your password, you should see something like this:
+
+
+	There are 4 alternatives which provide `java'.
+	
+	  Selection    Alternative
+	-----------------------------------------------
+	      1        /usr/bin/gij-wrapper-4.0
+	      2        /usr/lib/jvm/java-gcj/bin/java
+	 +    3        /usr/lib/j2se/1.4/bin/java
+	*     4        /usr/lib/j2sdk1.5-sun/bin/java
+	
+	Press enter to keep the default[*], or type selection number:
+
+Make sure the *-sign is in front of the one containing "1.5" (or higher) and "sun". If it is not, type in that number. If it is, just press enter. If you feel like this worked, you are done, and you can move to the directory where you have extracted your KRUT zip archive (move using "cd directory-name", or "cd .." - to go up in the hierarchy), and try running krut by entering:
+
+	java -jar KRUT.jar
+
+Notice that if you get the error message in the file "jmf-error.txt", that is part of this archive, there is a likely chance that your problem is with the JMF, and not the java version, so you should not have to bother further with this file. See the readme-file.
+
+If you have no "sun" or "1.5" (or higher) in the list above, you need to get it. At the time of typing this, you can find what you want at:
+
+	http://java.sun.com/j2se/1.5.0/download.jsp
+
+Please notice that there might be better versions of Suns Java available, and that it is always better to go to suns homepage (http://java.sun.com), and try to navigate your way through the link-jungle leading up to the latest available version.
+
+Once you've reached your download page, either through using the above link, or by finding it yourself, you should click on one of the following links (or the most similar thing you can find):
+
+	Download JDK 5.0 Update x
+
+	Download JRE 5.0 Update x
+
+DO NOT CLICK ON THE ONES SAYING "Downlad JDK x.x [..] with NetBeans x.x Bundle" OR "Download JAVA EE 5 SDK" !!
+
+I do not know why, they might work for you, but they didn't for me, and it's not worth the trouble it would take to find out.
+
+After that, you need to click the well-camouflaged "accept"-radio button. Then select the file under linux saying something like:
+
+	jdk-1_5_0_07-linux-i586.bin
+
+DO NOT PICK THE ONE WITH "rpm" IN IT !!
+
+Unless you're using some Red Hat system of course.
+
+Notice where you saved your file. Then open a terminal (Applications > Terminal), go to that directory where your file is saved (move using "cd directory-name", or "cd .." - to go up in the hierarchy), and type the following secret magic words:
+
+	chmod +x jre-1_5_0_07-linux-i586.bin
+
+(The file name needs to match the name of the file you've just downloaded, so you probably have to change the above a little. In the likely case that you've forgotten the name of your file because you're not equipped with super human memory, you can see it by typing "ls", and then looking for it a little.)
+
+For what follows, you need to have the following packages installed:
+
+	install 
+	fakeroot 
+	java-package 
+	java-common
+
+If you don't think you already have them (which you don't unless you've already happened to install them), you accomplish this by opening the Synaptic Package Manager in the menus (System > Administration > Synaptic Package Manager). After typing in your password again, you just have to start looking. I have forgotten where I found them, honestly; if you feel completely lost just try typing the 4 things into the search field, one by one, and see what happends. Your best bet is to just click wildly on everything that resembles any of the above, and mark it for installation. If you don't find the things you're looking for, you most likely have to open Software Preferences (Settings > Repositories) and mark all the check boxes saying "universe" and "multiverse" somewhere around them, then try again. Once you feel comfortable that you probably have all 4 of the packages listed above marked for installation (or already installed), click the "apply" button. If the install seems to halt, click the "Terminal"-thing (The new one that's in the window with the installation, NOT your old Terminal window), and see if it secretly wants you to type something before it will continue.
+
+The fun doesn't stop here.
+
+Now you need to type the following (obvious) things into your Terminal window (it might ask for your password if you've done something apart from the exact instructions given here, but that is nothing to worry about):
+
+	fakeroot make-jpkg jre-1_5_0_07-linux-i586.bin
+
+	sudo dpkg -i sun-j2re1.5_1.5.0+update07_i586.deb
+
+NOTE THAT THE FILENAMES (the last parts above) PROBABLY NEED TO BE CHANGED TO MATCH YOUR FILES (use the "ls"-command to see them) !!
+
+If you're reading this before you actually do the above, the second file will be created by the first command, so don't worry if you can't find it at first. There are apparently a number of ways in which the above can go wrong, see a link at the end of this text for a little more information, but I would presume that the general solution is always just that you need to work for another five to ten days on this, playing google-detective. If it doesn't look completely disastrous, you might just be able to continue (My computer said something along the lines of "unable to blablabla screens", but I don't remember what it was, it just made me feel uncomfortable).
+
+After getting this far, we're back at where we were at the start of this text. I will repeat the essentials. Type:
+
+	sudo update-alternatives --config java 
+
+
+You should see something like this:
+
+
+	There are 4 alternatives which provide `java'.
+	
+	  Selection    Alternative
+	-----------------------------------------------
+	      1        /usr/bin/gij-wrapper-4.0
+	      2        /usr/lib/jvm/java-gcj/bin/java
+	 +    3        /usr/lib/j2se/1.4/bin/java
+	*     4        /usr/lib/j2sdk1.5-sun/bin/java
+	
+	Press enter to keep the default[*], or type selection number:
+
+Make sure the *-sign is in front of the one containing "1.5" (or higher) and "sun". If it is not, type in that number. If it is, just press enter.
+
+You are now done.
+
+Krut should now start if you use your Terminal window to go to the directory where you unzipped it (move using "cd directory-name", or "cd .." - to go up in the hierarchy, use "ls" to check if you have it.). If you don't have a clue where you put it, just keep downloading new ones and unzip them until you can figure out a way to locate one of your copies. After locating "KRUT.jar" just type:
+
+	java -jar KRUT.jar
+
+This should be it.
+
+Notice that if you get the error message in the file "jmf-error.txt", that is part of this archive, there is a likely chance that your problem is with the JMF, and not the java version, so you should not have to bother further with this file. See the readme-file.
+
+
+For ubuntu, the process for obtaining java described above, with just a few more details, can be found on:
+
+	https://wiki.ubuntu.com/RestrictedFormats
