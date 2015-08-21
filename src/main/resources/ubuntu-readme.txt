@@ -1,7 +1,0 @@
-If you have downloaded the zip-archive meant for ubuntu, you have in the archive an instructional video (the file sound_ubuntu.mov) on how to enable sound recording. The procedure in that video is based on empirical research on one single machine (a Dell Inspiron 6000), and the author has no real insight into what he is doing in that video. He just knows that it works for him, and that it also makes other sound-capturing software in ubuntu suddenly start to function (such as the Sound Recorder).
-
-Although the author has the deepest respect for the hard work that has gone into ubuntu, and the people that have performed it, a quick google search reveals that there is obviosly something seriosly wrong with sound recording in ubuntu at this stage. In the light of this insight, the author has chosen not to delve further into the causes of the problem, nor into the consequences of its suggested solution.
-
-Everything in the instructional video was done on the Ubuntu distribution Breezy Badger. Please note that in newer distributions of Ubuntu, the procedure for enabling audio recording has most likely been simplified or changed.
-
-In short, do this at your own risc. A practical(?) trick would be to record yourself doing it, so you can backtrack in case something was damaged.
