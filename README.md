@@ -2,6 +2,14 @@
 
 Krut Computer Recorder
 
+- [Running Krut on Windows](#running-krut-on-windows)
+- [Video recording](#video-recording)
+- [Sound Recording](#sound-recording)
+- [Files](#files)
+- [Timer](#timer)
+- [Moving the capture area during recording](#moving-the-capture-area-during-recording)
+- [Preview Window](#preview-window)
+- [Compiling and Running](#compiling-and-running)
 
 
 ## Running Krut on Windows
@@ -87,10 +95,20 @@ Learning to move the capture area smoothly can take some practice. The best resu
 
 To allow the best possible use of the screen during a video with a moving capture area, it is recommended that the Preview Window is used.
 
-
-
 ## Preview Window
 
 The Preview Window displays a preview of the film being recorded, while it is recorded. The window is useful to make sure that the mouse pointer is inside the capture area. Alternatively if the capture area follows the mouse, the Preview Window is very useful to make sure that the capture area is positioned correctly after each movement.
 
 On slower computer systems, the Preview Window can be a strain on the system resources, causing primarily the audio quality to suffer.
+
+## Compiling and Running
+ 
+To compile and run Krut, start by extracting the contents of this zip-file to a new folder.
+   
+To compile the source code, the file jmf.jar must be included in the classpath. To obtain the file, download a version of krut other than the pure source code version, and copy the folder jmf into the folder where the contents of this zip-file have been extracted. An alternative way to obtain the file jmf.jar is to follow the information on http://java.sun.com/javase/technologies/desktop/media/jmf/index.jsp.
+  
+Open a console (command prompt), and go to the folder where the contents of this zip-file were extracted. To clarify: There should be a folder named "krut" in the folder where you now stand.
+   
+Assuming the file jmf.jar is placed in the path /jmf/lib/jmf.jar relative to the folder where you now stand, to compile Krut, type:  <Path to javac executable>javac -cp ./jmf/lib/jmf.jar;. ./krut/Run_KRUT.java
+   
+After that, to run the compiled program, type: java -cp ./jmf/lib/jmf.jar;. krut.Run_KRUT.java
