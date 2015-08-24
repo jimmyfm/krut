@@ -215,7 +215,7 @@ public class KrutSettings extends javax.swing.JFrame {
 
     /** The mouse timer is the timer that
      *  checks the mouse position on the screen
-     *  for the GUI, while recording isn´t running.
+     *  for the GUI, while recording isn't running.
      *  The timer is stopped when recording is started,
      *  and started again when recording is stopped.
      */
@@ -241,7 +241,7 @@ public class KrutSettings extends javax.swing.JFrame {
     
     /** The mouse timer is the timer that
      *  checks the mouse position on the screen
-     *  for the GUI, while recording isn´t running.
+     *  for the GUI, while recording isn't running.
      *  The timer is stopped when recording is started,
      *  and started again when recording is stopped.
      */
