@@ -223,7 +223,7 @@ public class ScreenGrabber extends Thread {
     /**	Used in the run() method to keep capture in sync.
      *	syncTime can be set needs to be set in the setSyncTime() method.
      *	This must be done before recording is started. */
-    double syncTime;
+    private double syncTime;
     /**	Used in the run() method to keep capture in sync. */
     private long currentTime;
     

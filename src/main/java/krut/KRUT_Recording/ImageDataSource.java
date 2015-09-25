@@ -11,11 +11,11 @@ import javax.media.protocol.PullBufferStream;
  * turn that into a stream of JMF buffers.
  * The DataSource is not seekable or positionable.
  */
-class ImageDataSource extends PullBufferDataSource {
+public class ImageDataSource extends PullBufferDataSource {
 
-    PullBufferStream streams[];
+    private PullBufferStream streams[];
 
-    ImageDataSource(int width, int height, int frameRate, DataList data) {
+    public ImageDataSource(int width, int height, int frameRate, DataList data) {
         streams = new PullBufferStream[1];
         streams[0] = new ImageSourceStream(width, height, frameRate, data);
     }

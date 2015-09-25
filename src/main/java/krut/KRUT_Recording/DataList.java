@@ -127,7 +127,7 @@ public class DataList {
      */
     private byte[] nodeData;
     
-    DataList() {
+    public DataList() {
         cntMissed = 0;
     }
     

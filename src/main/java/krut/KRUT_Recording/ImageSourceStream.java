@@ -11,15 +11,16 @@ import java.io.IOException;
 /**
  * The source stream to go along with ImageDataSource.
  */
-class ImageSourceStream implements PullBufferStream {
+public class ImageSourceStream implements PullBufferStream {
 
     private DataList JPGImages;
-    int width, height;
-    VideoFormat format;
-    float frameRate;
-    long seqNo = 0;
+    private int width;
+    private int height;
+    private VideoFormat format;
+    private float frameRate;
+    private long seqNo = 0;
 
-    boolean ended = false;
+    private boolean ended = false;
 
     public ImageSourceStream(int width, int height, int frameRate, DataList data) {
         this.width = width;

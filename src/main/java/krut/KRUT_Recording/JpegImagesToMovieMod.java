@@ -61,14 +61,16 @@ import javax.xml.crypto.Data;
  */
 public class JpegImagesToMovieMod extends Thread implements ControllerListener, DataSinkListener {
     
-//	Vector inputFiles;
-    MediaLocator oml;
-    int width = -1, height = -1, frameRate = 1;
+    //	Vector inputFiles;
+    private MediaLocator oml;
+    private int width = -1;
+    private int height = -1;
+    private int frameRate = 1;
     private DataList JPGImages = null;
-    public int picCnt = 0;
+    private int picCnt = 0;
     public boolean finished = false;
-    
-    public boolean doIt(int width, int height, int frameRate, MediaLocator outML) {
+
+    private boolean doIt(int width, int height, int frameRate, MediaLocator outML) {
         ImageDataSource ids = new ImageDataSource(width, height, frameRate, JPGImages);
         Processor p;
         
@@ -155,7 +157,7 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
     /**
      * Create the DataSink.
      */
-    DataSink createDataSink(Processor p, MediaLocator outML) {
+    private DataSink createDataSink(Processor p, MediaLocator outML) {
         
         DataSource ds;
         
@@ -179,14 +181,14 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
     }
     
     
-    Object waitSync = new Object();
-    boolean stateTransitionOK = true;
+    private Object waitSync = new Object();
+    private boolean stateTransitionOK = true;
     
     /**
      * Block until the processor has transitioned to the given state.
      * Return false if the transition failed.
      */
-    boolean waitForState(Processor p, int state) {
+    private boolean waitForState(Processor p, int state) {
         synchronized (waitSync) {
             try {
                 while (p.getState() < state && stateTransitionOK)
@@ -219,16 +221,16 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
             evt.getSourceController().close();
         }
     }
-    
-    
-    Object waitFileSync = new Object();
-    boolean fileDone = false;
-    boolean fileSuccess = true;
+
+
+    private Object waitFileSync = new Object();
+    private boolean fileDone = false;
+    private boolean fileSuccess = true;
     
     /**
      * Block until file writing is done.
      */
-    boolean waitForFileDone() {
+    private boolean waitForFileDone() {
         synchronized (waitFileSync) {
             try {
                 while (!fileDone)
@@ -259,7 +261,7 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
     }
     
     
-    JpegImagesToMovieMod(String args[]) {
+    public JpegImagesToMovieMod(String args[]) {
         
         if (args.length == 0)
             prUsage();
@@ -328,7 +330,7 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
     }
     
     // wakes up waiting threads.
-    public synchronized void wakeUp() {
+    private synchronized void wakeUp() {
         finished = true;
         notifyAll();
     }
@@ -337,7 +339,7 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
         doIt(width, height, frameRate, oml);
     }
     
-    static void prUsage() {
+    private static void prUsage() {
         System.err.println("Usage: java JpegImagesToMovie -w <width> -h <height> -f <frame rate> -o <output URL> <input JPEG file 1> <input JPEG file 2> ...");
         System.exit(-1);
     }
@@ -345,7 +347,7 @@ public class JpegImagesToMovieMod extends Thread implements ControllerListener, 
     /**
      * Create a media locator from the given string.
      */
-    static MediaLocator createMediaLocator(String url) {
+    private static MediaLocator createMediaLocator(String url) {
         
         MediaLocator ml;
         
