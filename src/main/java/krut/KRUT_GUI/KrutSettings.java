@@ -13,6 +13,10 @@ package krut.KRUT_GUI;
 
 // import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 
+import krut.Settings;
+
+import java.awt.*;
+
 /** This is a class that is used to display many user interface
  *  functions. In earlier versions of the program, most of the user
  *  interface functions were handled through free-floating windows.
@@ -77,8 +81,7 @@ public class KrutSettings extends javax.swing.JFrame {
     public javax.swing.Timer mouseTimer;    
     
     /** Creates new form KrutSettings */
-    public KrutSettings(
-        java.awt.Rectangle capRect, int startFps, int startEncQuality,
+    public KrutSettings(int startFps, int startEncQuality,
         boolean startStereo, boolean startSixteen, int startFrequency) {
 
         initComponents();
@@ -86,6 +89,7 @@ public class KrutSettings extends javax.swing.JFrame {
         soundQuery1.init(startFrequency, startStereo, startSixteen);
         qualitySlider1.init(startEncQuality);
         fPSQuery1.init(startFps);
+        Rectangle capRect = Settings.getCaptureRect();
         capSizeQuery1.init(capRect.x, capRect.y, capRect.width, capRect.height);
         saveFileChooser1.init(null, null, null);
         saveFileChooser1.myKrutSettings = this;
@@ -999,8 +1003,7 @@ public class KrutSettings extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new KrutSettings(new java.awt.Rectangle(0, 0, 360, 240),
-                        15, 50, false, false, 22050).setVisible(true);
+                new KrutSettings(15, 50, false, false, 22050).setVisible(true);
             }
         });
     }

@@ -214,12 +214,6 @@ public class Run_KRUT implements ActionListener, ItemListener {
      *  and makeNavigationButton and addButtons().
      */
     protected JButton timerRecButton = null;
-    /** The starting value of the capture size.
-     *  This is used in the createScreenGrabber() method.
-     *  It is also passed on to the KrutSettings constructur
-     *  from the init() method.
-     */
-    protected Rectangle capRect = new Rectangle(0, 0, 360, 240);
     /** This JFrame is used to show the SnapShots in.
      *  Used in the SnapAction() method.
      *  Needs to be initiated before the GUI shows.
@@ -977,8 +971,8 @@ public class Run_KRUT implements ActionListener, ItemListener {
         /** Take the snapshot */
         myGrabber.snapshot();
         outWindow.out("Snapshot taken, area : ");
-        outWindow.out(" " + myGrabber.capRect.x + ", " + myGrabber.capRect.y +
-                ", " + myGrabber.capRect.width + ", " + myGrabber.capRect.height);
+        Rectangle capRect = Settings.getCaptureRect();
+        outWindow.out(" " + capRect.x + ", " + capRect.y +", " + capRect.width + ", " + capRect.height);
         outWindow.out("Saved to file: " + myGrabber.screenshotFile.getAbsolutePath());
         /** Try to display the snapshot on screen. */
         try {
@@ -1010,8 +1004,8 @@ public class Run_KRUT implements ActionListener, ItemListener {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 /** imageUtils is a SnapShot object, initiated only once, in the declaration. */
-                imageUtils.initPreviewWindow(myGrabber.capRect.width,
-                        myGrabber.capRect.height);
+                Rectangle capRect = Settings.getCaptureRect();
+                imageUtils.initPreviewWindow(capRect.width, capRect.height);
             }
         });
     }
@@ -1372,10 +1366,11 @@ public class Run_KRUT implements ActionListener, ItemListener {
         /** Check if the capture area has changed.
          *  If it has, the ScreenGrabber needs to be reinitialized. */
         if (capQuery.altered) {
-            myGrabber.capRect = new Rectangle(capQuery.xVal,
+            Rectangle capRect = new Rectangle(capQuery.xVal,
                     capQuery.yVal,
                     capQuery.widthVal,
                     capQuery.heightVal);
+            Settings.setCaptureRect(capRect);
             grabberCriticalChange = true;
             capQuery.altered = false;
         }
@@ -1531,7 +1526,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
          *  then it's done. Both capRect and startFps are
          *  global parameters that are already initiated.
          */
-        myGrabber = new ScreenGrabber(capRect, startFps);
+        myGrabber = new ScreenGrabber(startFps);
         myGrabber.setPriority(Thread.MAX_PRIORITY);
         /** Starts the ScreenGrabber thread. This thread will
          *  basically go through the ScreenGrabber.init() method,
@@ -1690,8 +1685,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
 
         createScreenGrabber();
         createSampler();
-        krutSettings = new KrutSettings(
-                capRect, startFps, startEncQuality,
+        krutSettings = new KrutSettings(startFps, startEncQuality,
                 startStereo, startSixteen, startFrequency);
 
         timer = new KrutTimer(frame);
