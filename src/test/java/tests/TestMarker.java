@@ -4,7 +4,9 @@
  * Created on 30. maj 2007, 01:38
  */
 
-package krut.KRUT_GUI;
+package tests;
+
+import krut.KRUT_GUI.ScreenMarkerLine;
 
 /**
  *
@@ -13,7 +15,13 @@ package krut.KRUT_GUI;
 /** GUI for testing the ScreenMarkerLine class */
 public class TestMarker extends javax.swing.JFrame {
     
-    krut.KRUT_GUI.ScreenMarkerLine myLine;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -321832563600328671L;
+	
+	
+	krut.KRUT_GUI.ScreenMarkerLine myLine;
     
     /** Creates new form TestMarker */
     public TestMarker() {
@@ -38,7 +46,7 @@ public class TestMarker extends javax.swing.JFrame {
             System.out.println("error moving");
     }
     
-    private void resized() {
+    public void resized() {
         java.awt.Rectangle bounds = new java.awt.Rectangle(getBounds());
         java.awt.Insets insets = getInsets();
         bounds.x += insets.left;

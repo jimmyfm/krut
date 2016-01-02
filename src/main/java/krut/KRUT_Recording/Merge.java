@@ -32,12 +32,26 @@ package krut.KRUT_Recording;
  */
 
 import java.io.File;
-import javax.media.*;
-import javax.media.format.*;
-import javax.media.protocol.*;
-import javax.media.protocol.DataSource;
-import javax.media.datasink.*;
 import java.util.Vector;
+
+import javax.media.ControllerEvent;
+import javax.media.ControllerListener;
+import javax.media.DataSink;
+import javax.media.EndOfMediaEvent;
+import javax.media.Format;
+import javax.media.Manager;
+import javax.media.MediaLocator;
+import javax.media.Processor;
+import javax.media.ProcessorModel;
+import javax.media.datasink.DataSinkErrorEvent;
+import javax.media.datasink.DataSinkEvent;
+import javax.media.datasink.DataSinkListener;
+import javax.media.datasink.EndOfStreamEvent;
+import javax.media.format.AudioFormat;
+import javax.media.format.VideoFormat;
+import javax.media.protocol.ContentDescriptor;
+import javax.media.protocol.DataSource;
+import javax.media.protocol.FileTypeDescriptor;
 
 
 /**
@@ -47,7 +61,7 @@ import java.util.Vector;
  */
 public class Merge implements ControllerListener, DataSinkListener {
     
-    Vector sourcesURLs = new Vector(1);
+    Vector<String> sourcesURLs = new Vector<String>(1);
     Processor [] processors = null;
     String outputFile = null;
     String videoEncoding = "JPEG";
@@ -105,7 +119,7 @@ public class Merge implements ControllerListener, DataSinkListener {
         dataOutputs = new DataSource[sourcesURLs.size()];
         
         for (i = 0; i < sourcesURLs.size(); i++) {
-            String source = (String) sourcesURLs.elementAt(i);
+            String source = sourcesURLs.elementAt(i);
             MediaLocator ml = new MediaLocator(source);
             ProcessorModel pm = new MyPM(ml);
             try {
@@ -175,7 +189,7 @@ public class Merge implements ControllerListener, DataSinkListener {
 
         while (!done) {
             try {
-                Thread.currentThread().sleep(100);
+				Thread.sleep(100);
             } catch (InterruptedException ie) {
             }
             

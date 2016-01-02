@@ -11,10 +11,16 @@ package krut.KRUT_GUI;
  * @author  jonte
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import krut.memory.config.Configuration;
 
 /** This class is a JPanel used to handle the size of the capture area.
  *  The CapSizeQuery is displayed by the KrutSettings class,
@@ -22,7 +28,12 @@ import java.io.*;
  */
 public class CapSizeQuery extends JPanel implements ActionListener {
     
-    /** An OutputText object that the current class can use to create output. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -746356359097349889L;
+	
+	/** An OutputText object that the current class can use to create output. */
     public OutputText myOutput;
     /** A flag to signal that the capture sizes have changed.*/
     public boolean altered = false;
@@ -107,6 +118,12 @@ public class CapSizeQuery extends JPanel implements ActionListener {
         yText.setText(Integer.toString(yPos1));
         widthText.setText(Integer.toString(width));
         heightText.setText(Integer.toString(height));
+        Configuration config = Configuration.instance();
+        config.setCaptureX(xPos1);
+        config.setCaptureY(yPos1);
+        config.setCaptureWidth(width);
+        config.setCaptureHeight(height);
+        config.persist();        
     }
     
     /** Can be called to change the textfields back to the values stored in
@@ -134,14 +151,16 @@ public class CapSizeQuery extends JPanel implements ActionListener {
         } catch (NumberFormatException ne) {
             myOutput.out("Invalid entry, only numbers. " + ne);
         }
-        if (xVal < 0) {
-            myOutput.out("Invalid entry: " + xVal);
-            xVal = 0;
-        }
-        if (yVal < 0) {
-            myOutput.out("Invalid entry: " + yVal);
-            yVal = 0;
-        }
+        
+//        /* this is pretty dumb... in some systems, screen positions in negative ranegs are valid*/
+//        if (xVal < 0) {
+//            myOutput.out("Invalid entry: " + xVal);
+//            xVal = 0;
+//        }
+//        if (yVal < 0) {
+//            myOutput.out("Invalid entry: " + yVal);
+//            yVal = 0;
+//        }
         if (widthVal < 1) {
             myOutput.out("Invalid entry: " + widthVal);
             widthVal = 1;
@@ -159,6 +178,13 @@ public class CapSizeQuery extends JPanel implements ActionListener {
         yText.setText(Integer.toString(yVal));
         widthText.setText(Integer.toString(widthVal));
         heightText.setText(Integer.toString(heightVal));
+      
+        Configuration config = Configuration.instance();
+        config.setCaptureX(xVal);
+        config.setCaptureY(yVal);
+        config.setCaptureWidth(widthVal);
+        config.setCaptureHeight(heightVal);
+        config.persist();
         altered = true;
     }
 }

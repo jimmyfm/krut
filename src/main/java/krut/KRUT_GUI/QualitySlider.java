@@ -10,12 +10,17 @@ package krut.KRUT_GUI;
  *
  * @author  jonte
  */
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
-import java.io.*;
+import java.awt.Component;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /** This class is a JPanel containing a JSlider, used to handle the
  *  quality of video encoding.
@@ -25,7 +30,11 @@ import java.io.*;
 public class QualitySlider extends JPanel
         implements ChangeListener {
     
-    /** Video encoding quality, between 0 (lowest) and 100 (highest).
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1508918801750073615L;
+	/** Video encoding quality, between 0 (lowest) and 100 (highest).
      *  Video is encoded as JPG images, so the present parameter is a
      *  measure of JPG compression.
      */
@@ -41,7 +50,7 @@ public class QualitySlider extends JPanel
     /** The JSlider used to display/change the video encoding quality. */
     private JSlider encQuality;
     /** Used to display the right scale of values below the JSlider. */
-    private Dictionary labelTable;
+    private Dictionary<Integer, JLabel> labelTable;
     
     /** This method is called to initiate the QualitySlider.
      *  
@@ -72,7 +81,7 @@ public class QualitySlider extends JPanel
         encQuality.setPaintTicks(true);
         
         /** Create the label table. */
-        labelTable = new Hashtable();
+        labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put( new Integer( 0 ), new JLabel("0.00") );
         labelTable.put( new Integer( 25 ), new JLabel("0.25") );
         labelTable.put( new Integer( 50 ), new JLabel("0.50") );

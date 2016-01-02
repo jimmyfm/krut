@@ -11,15 +11,24 @@ package krut.KRUT_GUI;
  * @author  jonte
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /** A class that creates the part of the KrutSettings window
  *  where the FPS is entered.
  */
 public class FPSQuery extends JPanel implements ActionListener {
-    /** The fps that the next film we be recorded at. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -361591007740899306L;
+	/** The fps that the next film we be recorded at. */
     public int fps;
     /** The fps that the next film we be played back at .*/
     public int plb;
@@ -32,7 +41,7 @@ public class FPSQuery extends JPanel implements ActionListener {
     public boolean altered = false;
     public java.awt.GridBagConstraints gridBagConstraints;
     
-    private char trunc[] = new char[10];
+ //   private char trunc[] = new char[10];
     private JTextField playbackText, fpsText;
     private JLabel msLabel, messageLabel, emptyLabel, emptyLabel2,  topLeftLabel, topRightLabel;
     private JButton fpsButton, playbackButton;
@@ -43,9 +52,11 @@ public class FPSQuery extends JPanel implements ActionListener {
      *
      *  @param  fps     The initial fps value in both the 
      *                  recording and the playback fields.
+     * @param startEncFps 
      */
-    public void init(int fps) {
+    public void init(int fps, int plb) {
         this.fps = fps;
+        this.plb = plb;
         plb = fps;
         addWidgets();
     }

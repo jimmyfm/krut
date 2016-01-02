@@ -6,6 +6,9 @@
 
 package krut.KRUT_GUI;
 
+import krut.memory.gui.RecurringWindows;
+
+
 /**
  *
  *  @author  Jonas
@@ -40,7 +43,11 @@ package krut.KRUT_GUI;
  */
 public class EncodingProgressBar extends javax.swing.JFrame {
     
-    /** This is the DataList used to cancel the
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 633855314273206522L;
+	/** This is the DataList used to cancel the
      *  encoding of the movies. This is set
      *  from the ScreenGrabber in the EncodeThread
      *  constructor.
@@ -113,7 +120,8 @@ public class EncodingProgressBar extends javax.swing.JFrame {
     }
     
     /** Creates new form EncodingProgressBar */
-    public EncodingProgressBar() {
+    public EncodingProgressBar(String WinName) {
+    	setName(WinName);
         initComponents();
     }
     
@@ -121,7 +129,8 @@ public class EncodingProgressBar extends javax.swing.JFrame {
      *  
      *  @param out  The output window for this progress bar
      */
-    public EncodingProgressBar(OutputText out) {
+    public EncodingProgressBar(OutputText out, String WinName) {
+    	setName(WinName);
         myOutput = out;
         initComponents();
         setVisible(true);
@@ -140,7 +149,7 @@ public class EncodingProgressBar extends javax.swing.JFrame {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Krut data processing");
+        setTitle(RecurringWindows.KRUT_DATA_PROCESSING);
         jProgressBar1.setIndeterminate(true);
         jProgressBar1.setPreferredSize(new java.awt.Dimension(200, 18));
         jProgressBar1.setString("");
@@ -157,24 +166,16 @@ public class EncodingProgressBar extends javax.swing.JFrame {
         getContentPane().add(jButton1, new java.awt.GridBagConstraints());
 
         pack();
+        
+       
     }
     // </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-// TODO add your handling code here:
         cancelAction();
     }//GEN-LAST:event_jButton1ActionPerformed
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EncodingProgressBar().setVisible(true);
-            }
-        });
-    }
+ 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

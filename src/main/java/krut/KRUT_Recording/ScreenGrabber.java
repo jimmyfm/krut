@@ -11,20 +11,28 @@ package krut.KRUT_Recording;
  * @author  jonte
  */
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.imageio.*;
-import java.net.*;
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import krut.KRUT_GUI.tray.KRUT_System_Tray;
 import krut.Migration.JPEGCodec;
 import krut.Migration.JPEGEncodeParam;
 import krut.Migration.JPEGImageEncoder;
-import krut.Settings;
 
 /** This class is used both to record a movie and to take
  *  separate screen shots. The movie is recorded into a temporary
@@ -48,6 +56,9 @@ import krut.Settings;
  *  followed.
  */
 public class ScreenGrabber extends Thread {
+    
+    /** The capture area for video recording. */
+    public Rectangle capRect;
     /** The video encoding quality. The value of this parameter will be
      *  overwritten from Run_KRUT.checkInited(), so changing the initial
      *  value of this parameter will have no effect.
@@ -221,7 +232,7 @@ public class ScreenGrabber extends Thread {
     /**	Used in the run() method to keep capture in sync.
      *	syncTime can be set needs to be set in the setSyncTime() method.
      *	This must be done before recording is started. */
-    private double syncTime;
+    double syncTime;
     /**	Used in the run() method to keep capture in sync. */
     private long currentTime;
     
@@ -240,7 +251,8 @@ public class ScreenGrabber extends Thread {
     /**	The average size of captured and encoded images.
      *	Used to get an estimate of the number of frames
      *	that can be stored in memory. */
-    private double avgSize = Double.MAX_VALUE;
+    @SuppressWarnings("unused")
+	private double avgSize = Double.MAX_VALUE;
     /**	The Encoder, used to
      *	encode captured images. */
     private JPEGImageEncoder encoder;
@@ -273,18 +285,69 @@ public class ScreenGrabber extends Thread {
      *  object is used in capRectMover.
      */
     private Direction moveDir = new Direction(0,0);
+	private KRUT_System_Tray systemTray;
+        
+    /** A class that can hold a direction in a two-dimensional coordinate
+     *  system. The x and y components of the direction are stored as
+     *  double values. The class also has a method for normalizing a direction
+     *  represented by two integer components.
+     *
+     *  This class is used to move the capRect in the capRectMover() and
+     *  getDirectionEdgeIntersection() methods.
+     */
+    private class Direction {
+        /** The x component of the direction. */
+        public double x;
+        /** The y component of the direction. */
+        public double y;
+        
+        /** A constructor creating a Direction object with the
+         *  given x and y components.
+         *
+         *  @param  x   The x-component of the Direction.
+         *  @param  y   The y-component of the Direction.
+         */
+        Direction(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+        
+        /** A method to take two integer components, and return a normalized
+         *  Direction.
+         *
+         *  @param  x   The x-component of the direction.
+         *  @param  y   The y-component of the direction.
+         *
+         *  @return     A new Direction object holding a normalized representation
+         *              of the given direction. The direction (1, 0) is returned
+         *              if the arguments to this method were both 0.
+         */
+        public Direction normalize(int x, int y) {
+            double length = Math.sqrt(x*x + y*y);
+            if (0 < length) return new Direction(x / length, y / length);
+            else return new Direction (1, 0);
+        } 
+    }
+    
 
     /** Constructor for ScreenGrabber.
      *  Test encoding to get a good
      *  value for avgCapSize set up.
      *  Then setup outfiles.
      *
+     *  @param  capSize The initial capture area of the ScreenGrabber.
+     *                  This can later be changed by changing the public
+     *                  parameter capRect, and then calling the init method
+     *                  of this class.
      *  @param  fps     The initial fps of the ScreenGrabber. This can
      *                  later be changed by calling the setFps method of this
      *                  class.
+     * @param systemTray 
      */
-    public ScreenGrabber(int fps) {
-        setFps(fps, fps);
+    public ScreenGrabber(Rectangle capSize, int fps, int plb, KRUT_System_Tray systemTray) {
+        capRect = capSize;
+        this.systemTray=systemTray; 
+        setFps(fps, plb);
         try {
             // Start the robot, and perform a
             // performance test.
@@ -300,16 +363,7 @@ public class ScreenGrabber extends Thread {
         }
     }
     
-    /** Constructor for ScreenGrabber.
-     *  Setup the capture Rectangle and the fps
-     *  to use. Then test encoding to get a good
-     *  value for avgCapSize set up.
-     *  Then setup outfiles.
-     */
-    public ScreenGrabber() {
-        this(15);
-    }
-    
+
     
     /**	Init or reinit the encoder.
      * This needs to be done everytime the amount of memory
@@ -331,7 +385,7 @@ public class ScreenGrabber extends Thread {
         sizes = null;
         missedFrames = null;
         System.gc();
-        /** trying to allocate all available memory except 20MB
+        /** trying to allocate all available memory except 30MB
          *  that are saved for performance purposes. If this fails,
          *  allocate half of the available memory below.
          *
@@ -341,7 +395,7 @@ public class ScreenGrabber extends Thread {
          */
         myRuntime = Runtime.getRuntime();
         Double convert = new Double(myRuntime.maxMemory() -
-                myRuntime.totalMemory()	+ myRuntime.freeMemory() - 2097152*10);
+                myRuntime.totalMemory()	+ myRuntime.freeMemory() - 2097152*15);
         System.out.println("Memory attempt 1: " + convert);
         if (convert.intValue() < 0) {
             convert = new Double((myRuntime.maxMemory() -
@@ -397,7 +451,7 @@ public class ScreenGrabber extends Thread {
          *  First we take an "average (=random)" image for the method
          *  encoder.getDefaultJPEGEncodeParam(image) below.
          */
-        image = robot.createScreenCapture(Settings.getCaptureRect());
+        image = robot.createScreenCapture(capRect);
         /** Set the encoder to the OutputStream that stores in memory. */
         encoder = JPEGCodec.createJPEGEncoder(jpgBytesII);
         /** Get an "average" JPEGEncodeParam */
@@ -413,7 +467,7 @@ public class ScreenGrabber extends Thread {
                 image.getHeight(),
                 image.getType());
         encoder.encode(image);
-        lastFrame = jpgBytesII.toByteArray();
+        lastFrame = jpgBytesII==null? new byte[0]:jpgBytesII.toByteArray();
         /** Clear this output stream, which we will not use for 
          *  anything more than this initialization procedure, 
          *  to save some memory */
@@ -423,7 +477,7 @@ public class ScreenGrabber extends Thread {
          *
          *  First we take another "average" screenshot.
          */
-        image = robot.createScreenCapture(Settings.getCaptureRect());
+        image = robot.createScreenCapture(capRect);
         /** Set the encoder to the FileOutputStream */        
         encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
         /** Get an "average" JPEGEncodeParam */
@@ -437,6 +491,7 @@ public class ScreenGrabber extends Thread {
          *  frame, and then try to fill it by repeating a
          *  frame that never existed.
          */
+        if( lastFrame!= null && lastFrame.length > 0)
         jpgBytes.write(lastFrame, 0, lastFrame.length);
         /** Allocate int Arrays for storing image sizes,
          *  and missed images. Setup remaining variables.
@@ -529,7 +584,6 @@ public class ScreenGrabber extends Thread {
      */
     private Polygon createMouse(Point mousePos) {
         Polygon polly = new Polygon();
-        Rectangle capRect = Settings.getCaptureRect();
         polly.addPoint(mousePos.x - capRect.x, mousePos.y - capRect.y);
         polly.addPoint(mousePos.x - capRect.x, mousePos.y  - capRect.y + 17);
         polly.addPoint(mousePos.x - capRect.x + 5, mousePos.y  - capRect.y + 12);
@@ -659,9 +713,7 @@ public class ScreenGrabber extends Thread {
          *  capRect, and the mouse pointer.
          */
         int distance;
-
-        Rectangle capRect = Settings.getCaptureRect();
-
+                
         /** Figure out where the capRect would be positioned if it
          *  was centered around the mouse pointer.
          */ 
@@ -773,7 +825,7 @@ public class ScreenGrabber extends Thread {
             for (int cnt = 0; cnt < iterations ; cnt++) {
                 syncTime = System.currentTimeMillis();
                 // image is a class BufferedImage.
-                image = robot.createScreenCapture(Settings.getCaptureRect());
+                image = robot.createScreenCapture(capRect);
                 avgTime = System.currentTimeMillis() - syncTime + avgTime;
             }
             avgTime /= iterations;
@@ -807,7 +859,7 @@ public class ScreenGrabber extends Thread {
         try {
             //	Capture one image in case there is none
             //	in memory. image is a class BufferedImage.
-            image = robot.createScreenCapture(Settings.getCaptureRect());
+            image = robot.createScreenCapture(capRect);
             //	Initialize a new JPEGEncoder for local jpgBytes
             encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
             param = encoder.getDefaultJPEGEncodeParam(image);
@@ -862,7 +914,7 @@ public class ScreenGrabber extends Thread {
         try {
             FileOutputStream outFile = new FileOutputStream(screenshotFile);
             // image is a BufferedImage.
-            image = robot.createScreenCapture(Settings.getCaptureRect());
+            image = robot.createScreenCapture(capRect);
             JPEGImageEncoder snapEncoder = JPEGCodec.createJPEGEncoder(outFile);
             snapEncoder.setJPEGEncodeParam(param);
             snapEncoder.encode(image);
@@ -889,8 +941,6 @@ public class ScreenGrabber extends Thread {
             while (testFile.exists() && !testFile.delete()) {
                 testFile = mySaveQuery.filterFile(mySaveQuery.getNextFile(testFile));
             }
-
-            Rectangle capRect = Settings.getCaptureRect();
 
             String tempTotal = testFile.getPath();
             String arguments[] = { "-w", Integer.toString(capRect.width),
@@ -956,7 +1006,8 @@ public class ScreenGrabber extends Thread {
      *  @param  inImage The BufferedImage.
      *  @return A byte array containging inImage.
      */
-    private byte[] bufferedImageToByteArray(BufferedImage inImage) {
+    @SuppressWarnings("unused")
+	private byte[] bufferedImageToByteArray(BufferedImage inImage) {
         int[] intArray = inImage.getRGB(0, 0,
                                         inImage.getWidth(),
                                         inImage.getHeight(),
@@ -974,7 +1025,7 @@ public class ScreenGrabber extends Thread {
         }
         return temp.toByteArray();
     }
-    
+    long pingTime; 
     /** Main working method.
      *  It captures a frame, and sleeps for the amount of time
      *  left until the next frame should be captured.
@@ -1022,7 +1073,7 @@ public class ScreenGrabber extends Thread {
                         capRectMover(mousePos);
                     }
                     /** This is where we capture the image. */
-                    image = robot.createScreenCapture(Settings.getCaptureRect());
+                    image = robot.createScreenCapture(capRect);
                     /** Add mouse cursor to image.  */
                     if (getMouse) {
                         /** Get graphics to paint in. */
@@ -1055,6 +1106,8 @@ public class ScreenGrabber extends Thread {
                         syncTime += time;
                     }
                     cntPics++;
+                    
+                    pingTray();
                     /** The loop is finished. */
                     Thread.sleep((long) syncTime - currentTime);
                 }
@@ -1114,6 +1167,8 @@ public class ScreenGrabber extends Thread {
                     images.missedFrames = missedFrames;
                     images.setInFile(dumpFile);
                     recording = false;
+                    if( systemTray!= null) systemTray.idleIcon();
+
                     /** wake up users waiting to sync audio. */
                     wakeUp();
                     /** Recording is now finished, encoding starts
@@ -1133,6 +1188,17 @@ public class ScreenGrabber extends Thread {
             }
         }
     }
+
+
+	/**
+	 * If a system tray is attached, ping the image to remember the users that the record is running.
+	 * */
+	public void pingTray() {
+		if( systemTray!= null &&  currentTime-pingTime > 333 ){
+			pingTime= currentTime; 
+			systemTray.pingIcon(); 
+		}
+	}
     
     /** This is the method where the encoding of
      *  the mov-file takes place. In essence, this

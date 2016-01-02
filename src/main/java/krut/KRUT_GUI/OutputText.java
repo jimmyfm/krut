@@ -11,11 +11,13 @@ package krut.KRUT_GUI;
  * @author  jonte
  */
 
-import java.awt.*;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Container;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /** This class is a very simple output window.
  *  The out() method is used to print lines
@@ -60,6 +62,8 @@ public class OutputText  {
         
         /** Create a scrolled text area. */
         output = new JTextArea(5, 30);
+     
+
         output.setEditable(false);
         scrollPane = new JScrollPane(output);
         
@@ -124,13 +128,19 @@ public class OutputText  {
         
         outFrame.setContentPane(this.createContentPane());
         
+
         /** Display the window. */
         outFrame.setSize(450, 260);
+        
         outFrame.setVisible(false);
         inited = true;
         /** In case there are any threads waiting for this window
          *  to be initiated, they are now woken.
          */
         wakeUp();
+        
+        
     }
+
+	
 }

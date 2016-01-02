@@ -35,7 +35,11 @@ public class ScreenMarkerLine {
     /** The JPanel class that is used to draw the ScreenMarkerLine.
      */
     private class LinePanel extends javax.swing.JPanel {
-        java.awt.Color backupColor;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 3374045436410808865L;
+		java.awt.Color backupColor;
         
         public void paintComponent(java.awt.Graphics g) {
             java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
@@ -122,7 +126,7 @@ public class ScreenMarkerLine {
     /** This is used to tell the paintThread when it
      *  should take a snapshot.
      */
-    private boolean takeSnapshot = false;
+ //   private boolean takeSnapshot = false;
     
     /** The time in ms that the paintThread holds between
      *  each attempt to find a marker.

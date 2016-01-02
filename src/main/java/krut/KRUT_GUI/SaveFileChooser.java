@@ -11,11 +11,15 @@ package krut.KRUT_GUI;
  * @author  jonte
  */
 
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.filechooser.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /** This class is a JPanel used to handle the file names of the save files.
  *  The SaveFileChooser is displayed by the KrutSettings class,
@@ -26,7 +30,11 @@ import javax.swing.filechooser.*;
  *  called any time a save file name is changed.
  */
 public class SaveFileChooser extends JPanel implements ActionListener {
-    /** The file for the screenshot (jpg). */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3010923209303709208L;
+	/** The file for the screenshot (jpg). */
     public File imageFile;
     /** The file for the audio (wav). */
     public File audioFile;
@@ -42,7 +50,7 @@ public class SaveFileChooser extends JPanel implements ActionListener {
      */
     public KrutSettings myKrutSettings;
     /** Newline. */
-    static private final String newline = "\n";
+    public static final String newline = "\n";
     /** The button to change the movie save file. */
     private JButton movieButton;
     /** The button to change the audio save file. */

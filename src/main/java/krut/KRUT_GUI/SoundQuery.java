@@ -11,10 +11,16 @@ package krut.KRUT_GUI;
  * @author  jonte
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import krut.KRUT_GUI.*;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 /** This class is a JPanel used to handle the audio options.
  *  The SoundQuery is displayed by the KrutSettings class,
@@ -22,7 +28,11 @@ import krut.KRUT_GUI.*;
  */
 public class SoundQuery extends JPanel implements ActionListener {
     
-//    public JFrame queryFrame;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7766896157372674695L;
+	//    public JFrame queryFrame;
 //    public JPanel queryPanel;
     /** The sound sampling frequency in Hz. */
     public int frequency;
@@ -36,9 +46,9 @@ public class SoundQuery extends JPanel implements ActionListener {
     public boolean altered = false;
     public java.awt.GridBagConstraints gridBagConstraints;
     /**  The done button. */
-    private JButton doneButton;
+  //  private JButton doneButton;
     /**  Contains the word "Frequency:". */
-    private JTextField frequencyText;
+ //   private JTextField frequencyText;
     
     /** This method is called to initiate the SoundQuery.
      *  
@@ -81,7 +91,8 @@ public class SoundQuery extends JPanel implements ActionListener {
         
         String[] petStrings = {"11025", "22050", "44100"};
         
-        JComboBox petList = new JComboBox(petStrings);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		JComboBox petList = new JComboBox(petStrings);
         
         /** If the frequency is not a valid one, this automatically
          *  corrects it to the default value 22050.
@@ -142,7 +153,8 @@ public class SoundQuery extends JPanel implements ActionListener {
         } else if (e.getActionCommand() == "8 bit sound") {
             sixteenBit = false;
         } else {
-            JComboBox cb = (JComboBox) e.getSource();
+            @SuppressWarnings("rawtypes")
+			JComboBox cb = (JComboBox) e.getSource();
             String freqString = (String) cb.getSelectedItem();
             try {
                 frequency = Integer.parseInt(freqString);

@@ -1,9 +1,10 @@
 package krut.Migration;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
 
 /**
  * @author Luigi P
@@ -28,6 +29,7 @@ public class JPEGImageEncoder {
 
     public void encode(BufferedImage image) {
         try {
+        	if(this.out!= null)
             ImageIO.write(image, "jpeg", this.out);
         } catch (IOException e) {
             e.printStackTrace();

@@ -12,17 +12,21 @@ package krut.KRUT_Recording;
  */
 
 
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
 
 /** The audio sampler records sound from a DataLine obtained
  *  from the AudioSystem. The sound is recorded by obtaining a
@@ -131,30 +135,37 @@ public class Sampler extends Thread {
     private File m_outputFile = null;
     //	run() method variables (some are set up in init())
     //	syncTime is set in setSyncTime(). This MUST be done before sampling.
-    private int numBytesRead, sampleSizeInBytes, acceptedLag, totalBytes, addedBytes;
+    @SuppressWarnings("unused")
+	private int numBytesRead, sampleSizeInBytes, acceptedLag, totalBytes, addedBytes;
     private int bytesToCut, acceptedAhead;
     private int bytesToRead, missingFrames, missingBytes, bufferSize;
-    private long currentTime, syncTime = 0, currentFrame, totalFrames, bufferSizeInFrames;
-    private long checkTime, checkT2;
+    @SuppressWarnings("unused")
+	private long currentTime, syncTime = 0, currentFrame, totalFrames, bufferSizeInFrames;
+    @SuppressWarnings("unused")
+	private long checkTime, checkT2;
     //	The two byte arrays used to store sample data. emptyBytes is filled with
     //	0s, and used to fill up the audio stream back to sync, whenever
     //	samples are lost. They are set up in init() and used in run().
-    private byte[] data, emptyBytes;
+    @SuppressWarnings("unused")
+	private byte[] data, emptyBytes;
     //  This is a set of parameters for setting the sound back in sync if there
     //  were missed frames. (or just missing frames compared to the system clock).
-    private int readFrames, framesMultiplicity, bonusMultiplicity;
+    @SuppressWarnings("unused")
+	private int readFrames, framesMultiplicity, bonusMultiplicity;
     private int frameBytePos, bonusFrames;
     //  This is the counter for how many times the
     //  sampler should wait before correcting a delayed sample.
     //  This value can not be changed here, countTimes above should be
     //  used for changing this. That value will be copied into countdown on
     //  each iteration of the run loop.
-    private int countdown = 1, countup = 4, testCnt = 0;
+    @SuppressWarnings("unused")
+	private int countdown = 1, countup = 4, testCnt = 0;
     //  Parameters introduced for hiTechFill, they are, as
     //  all others, global just to add one nanosecond to the
     //  execution time. They are all explained in hiTechFill.
     private int framePos, intervalCnt, loopInterval, multiplicityCnt;
-    private int restFrames, added, bonusCnt;
+    @SuppressWarnings("unused")
+	private int restFrames, added, bonusCnt;
     
     
     
@@ -607,7 +618,8 @@ public class Sampler extends Thread {
      *  @return     true if the file was successfully created,
      *              false if not.
      */
-    public synchronized boolean setAudioFile(String fileName) {
+    @SuppressWarnings("finally")
+	public synchronized boolean setAudioFile(String fileName) {
         boolean set = false;
         try {
             audioFile = new File(fileName);
