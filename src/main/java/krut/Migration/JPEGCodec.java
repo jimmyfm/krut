@@ -7,7 +7,7 @@ import java.io.OutputStream;
  */
 public class JPEGCodec {
 
-    public static JPEGImageEncoder createJPEGEncoder(OutputStream jpgBytes) {
-        return new JPEGImageEncoder(jpgBytes);
-    }
+	public static JPEGImageEncoder createJPEGEncoder(OutputStream jpgBytes) {
+		return new JPEGImageEncoder(jpgBytes);
+	}
 }

@@ -10,31 +10,30 @@ import java.io.OutputStream;
  */
 public class JPEGImageEncoder {
 
-    private OutputStream out;
+	private final OutputStream out;
+	private JPEGEncodeParam JPEGEncodeParam;
 
-    private JPEGEncodeParam JPEGEncodeParam;
+	public JPEGImageEncoder(OutputStream out) {
+		this.out = out;
+	}
 
-    public JPEGImageEncoder(OutputStream out) {
-        this.out = out;
-    }
+	public JPEGEncodeParam getDefaultJPEGEncodeParam(BufferedImage image) {
+		return new JPEGEncodeParam();
+	}
 
-    public JPEGEncodeParam getDefaultJPEGEncodeParam(BufferedImage image) {
-        return new JPEGEncodeParam();
-    }
+	public void setJPEGEncodeParam(JPEGEncodeParam JPEGEncodeParam) {
+		this.JPEGEncodeParam = JPEGEncodeParam;
+	}
 
-    public void setJPEGEncodeParam(JPEGEncodeParam JPEGEncodeParam) {
-        this.JPEGEncodeParam = JPEGEncodeParam;
-    }
+	public void encode(BufferedImage image) {
+		try {
+			ImageIO.write(image, "jpeg", this.out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void encode(BufferedImage image) {
-        try {
-            ImageIO.write(image, "jpeg", this.out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public krut.Migration.JPEGEncodeParam getJPEGEncodeParam() {
-        return JPEGEncodeParam;
-    }
+	public krut.Migration.JPEGEncodeParam getJPEGEncodeParam() {
+		return JPEGEncodeParam;
+	}
 }

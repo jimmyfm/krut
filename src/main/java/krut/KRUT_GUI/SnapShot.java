@@ -1,19 +1,19 @@
-/*
- * SnapShot.java
- *
- * Created on den 29 december 2004, 23:24
- */
-
 package krut.KRUT_GUI;
 
-/**
- *
- * @author  jonte
- */
-
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
     /**	This class is used to show a snapshot. Originally
      *  the snapshot was only used to show a single 
@@ -29,20 +29,24 @@ import java.awt.image.BufferedImage;
      *  methods in RunKRUT and ScreenGrabber, and the
      *  new calls for updating the preview window are
      *  made from the run method in the ScreenGrabber
-     *  class. */
+     *  class. 
+     *
+     *@since 29 december 2004, 23:24
+     * @author  jonte
+     */
 public class SnapShot extends Thread {
     
     /** The JFrame used to
      *  show the animation of the film as it records.*/
     public JFrame previewFrame;
     /** The class that paints the preview images. */
-    ShowPic preview;
+    private ShowPic preview;
     
     /** This is the amount of milliseconds to sleep between each update
      *  of the window. The window will only update if updatePreviewImage
      *  has been called since the last update.
      */
-    public int sleepMillis = 1000;
+    private int sleepMillis = 1000;
     
     /** A flag used to keep track of if the update Thread is running or not.
      */
@@ -65,6 +69,7 @@ public class SnapShot extends Thread {
      *  the imageUpdated parameter is true. Then the
      *  present method sleeps again.
      */
+    @Override
     public void run() {
         while (isRunning)
         try {
@@ -161,7 +166,7 @@ public class SnapShot extends Thread {
         
     /** This class shows the image.
      */
-    public class ShowPic extends JPanel {
+    private class ShowPic extends JPanel {
         private JPanel drawingPane;
         private BufferedImage image;
         private Graphics graph;
@@ -228,6 +233,5 @@ public class SnapShot extends Thread {
         
         frame.pack();
         frame.setVisible(true);
-    }
-    
+    }   
 }

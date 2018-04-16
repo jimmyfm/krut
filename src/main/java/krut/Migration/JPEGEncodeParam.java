@@ -5,21 +5,19 @@ package krut.Migration;
  */
 public class JPEGEncodeParam {
 
-    private float encQuality;
-    private boolean b;
+	private float encQuality;
+	private boolean b;
 
-    public void setQuality(float encQuality, boolean b) {
-        this.encQuality = encQuality;
-        this.b = b;
-    }
+	public void setQuality(float encQuality, boolean b) {
+		this.encQuality = encQuality;
+		this.b = b;
+	}
 
-    public float getEncQuality() {
-        return this.encQuality;
-    }
+	public float getEncQuality() {
+		return this.encQuality;
+	}
 
-    public boolean getB() {
-        return this.b;
-    }
-
-
+	public boolean getB() {
+		return this.b;
+	}
 }

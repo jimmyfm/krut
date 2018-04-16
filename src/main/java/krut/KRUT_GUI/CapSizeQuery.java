@@ -6,15 +6,14 @@
 
 package krut.KRUT_GUI;
 
-/**
- *
- * @author  jonte
- */
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /** This class is a JPanel used to handle the size of the capture area.
  *  The CapSizeQuery is displayed by the KrutSettings class,
@@ -22,7 +21,8 @@ import java.io.*;
  */
 public class CapSizeQuery extends JPanel implements ActionListener {
     
-    /** An OutputText object that the current class can use to create output. */
+	private static final long serialVersionUID = 1L;
+	/** An OutputText object that the current class can use to create output. */
     public OutputText myOutput;
     /** A flag to signal that the capture sizes have changed.*/
     public boolean altered = false;

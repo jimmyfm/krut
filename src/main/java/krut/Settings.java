@@ -1,8 +1,6 @@
 package krut;
 
-import krut.Run_KRUT;
-
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.prefs.Preferences;
 
 /**
@@ -23,7 +21,6 @@ public class Settings {
     public static final String PREF_CAPRECT_Y = "PREF_CAPRECT_Y";
     public static final String PREF_CAPRECT_WIDHT = "PREF_CAPRECT_WIDHT";
     public static final String PREF_CAPRECT_HEIGHT = "PREF_CAPRECT_HEIGHT";
-
 
     /**
      * The starting value of the capture size.
@@ -46,6 +43,4 @@ public class Settings {
         prefs.putInt(PREF_CAPRECT_WIDHT, (int) captureRect.getWidth());
         prefs.putInt(PREF_CAPRECT_HEIGHT, (int) captureRect.getHeight());
     }
-
-
 }

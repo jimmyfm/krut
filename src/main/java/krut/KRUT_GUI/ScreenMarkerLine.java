@@ -213,7 +213,7 @@ public class ScreenMarkerLine {
             System.out.println("waiting " + ms + "ms.");
             wait(ms);
         } catch (InterruptedException ie) {
-            System.err.println(ie);
+            ie.printStackTrace();
         }
     }
     

@@ -1,29 +1,20 @@
-/*
- * KrutSettings.java
- *
- * Created on 18. december 2006, 22:52
- */
-
 package krut.KRUT_GUI;
 
-/**
- *
- * @author  Jonas
- */
-
-// import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
+import java.awt.Rectangle;
 
 import krut.Settings;
 
-import java.awt.*;
-
-/** This is a class that is used to display many user interface
- *  functions. In earlier versions of the program, most of the user
- *  interface functions were handled through free-floating windows.
- *  These windows were then collected inside the GUI created by this class.
- *  Because of this, there are both user manageable settings for the program
- *  handled directly by this class, and also several settings
- *  handled by other classes, which in turn are displayed through this class.
+/**
+ * This is a class that is used to display many user interface functions. In
+ * earlier versions of the program, most of the user interface functions were
+ * handled through free-floating windows. These windows were then collected
+ * inside the GUI created by this class. Because of this, there are both user
+ * manageable settings for the program handled directly by this class, and also
+ * several settings handled by other classes, which in turn are displayed
+ * through this class.
+ *
+ * @since 18. december 2006, 22:52
+ * @author Jonas
  */
 public class KrutSettings extends javax.swing.JFrame {
     

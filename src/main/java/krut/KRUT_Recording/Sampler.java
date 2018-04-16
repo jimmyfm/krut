@@ -6,23 +6,21 @@
 
 package krut.KRUT_Recording;
 
-/**
- *
- * @author  jonte
- */
-
-
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
 
 /** The audio sampler records sound from a DataLine obtained
  *  from the AudioSystem. The sound is recorded by obtaining a
@@ -110,9 +108,6 @@ public class Sampler extends Thread {
     // --------------------------------------------------------------------
     /**	The size of the memory buffer for the save file, in bytes. */
     private int memoryBufferSize = 1024*1024;
-    /**	The default filename used for saving wav data.
-     *	Wav- save file name is changed in setAudioFile() */
-    private String defaultFileName = new String("sampleaudio.wav");
     /**	The default filename used for saving raw audio data.
      *  This file name can be changed here. */
     private String bufferFileName = new String("samplebuffer.buf");
@@ -168,7 +163,7 @@ public class Sampler extends Thread {
      *  @param  fileName    The file name of the audio file that
      *                      is created by this Sampler.
      */
-    public Sampler(String fileName) {
+    private Sampler(String fileName) {
         if (!setAudioFile(fileName))
             System.out.println("Error! " +
                     "Failed to open output file " +
@@ -184,10 +179,7 @@ public class Sampler extends Thread {
      *  method.
      */
     public Sampler() {
-        if (!setAudioFile(defaultFileName))
-            System.out.println("Error! " +
-                    "Failed to open output file " +
-                    defaultFileName + ".");
+    	this(System.currentTimeMillis() + ".waw");
     }
     
     

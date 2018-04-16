@@ -13,11 +13,11 @@ public class Direction {
     /**
      * The x component of the direction.
      */
-    public double x;
+    public final double x;
     /**
      * The y component of the direction.
      */
-    public double y;
+    public final double y;
 
     /**
      * A constructor creating a Direction object with the
@@ -26,7 +26,7 @@ public class Direction {
      * @param x The x-component of the Direction.
      * @param y The y-component of the Direction.
      */
-    Direction(double x, double y) {
+    Direction(final double x, final double y) {
         this.x = x;
         this.y = y;
     }
@@ -41,9 +41,11 @@ public class Direction {
      * of the given direction. The direction (1, 0) is returned
      * if the arguments to this method were both 0.
      */
-    public Direction normalize(int x, int y) {
-        double length = Math.sqrt(x * x + y * y);
-        if (0 < length) return new Direction(x / length, y / length);
-        else return new Direction(1, 0);
+    public Direction normalize(final int x, final int y) {
+        final double length = Math.sqrt(x * x + y * y);
+		if (0 < length)
+			return new Direction(x / length, y / length);
+		else
+			return new Direction(1, 0);
     }
 }

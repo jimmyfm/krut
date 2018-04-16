@@ -6,14 +6,10 @@
 
 package krut.KRUT_Recording;
 
-/**
- *
- * @author  jonte
- */
-
-import java.awt.image.*;
-import java.io.*;
-import javax.imageio.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /** DataList is a class used to reload the images
  *  from the file they are saved in by the ScreenGrabber,

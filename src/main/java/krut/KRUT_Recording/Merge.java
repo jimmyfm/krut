@@ -1,4 +1,3 @@
-
 package krut.KRUT_Recording;
 
 /*
@@ -32,12 +31,26 @@ package krut.KRUT_Recording;
  */
 
 import java.io.File;
-import javax.media.*;
-import javax.media.format.*;
-import javax.media.protocol.*;
-import javax.media.protocol.DataSource;
-import javax.media.datasink.*;
 import java.util.Vector;
+
+import javax.media.ControllerEvent;
+import javax.media.ControllerListener;
+import javax.media.DataSink;
+import javax.media.EndOfMediaEvent;
+import javax.media.Format;
+import javax.media.Manager;
+import javax.media.MediaLocator;
+import javax.media.Processor;
+import javax.media.ProcessorModel;
+import javax.media.datasink.DataSinkErrorEvent;
+import javax.media.datasink.DataSinkEvent;
+import javax.media.datasink.DataSinkListener;
+import javax.media.datasink.EndOfStreamEvent;
+import javax.media.format.AudioFormat;
+import javax.media.format.VideoFormat;
+import javax.media.protocol.ContentDescriptor;
+import javax.media.protocol.DataSource;
+import javax.media.protocol.FileTypeDescriptor;
 
 
 /**
@@ -47,22 +60,22 @@ import java.util.Vector;
  */
 public class Merge implements ControllerListener, DataSinkListener {
     
-    Vector sourcesURLs = new Vector(1);
-    Processor [] processors = null;
-    String outputFile = null;
-    String videoEncoding = "JPEG";
-    String audioEncoding = "LINEAR";
-    String outputType = FileTypeDescriptor.QUICKTIME;
-    DataSource [] dataOutputs = null;
-    DataSource merger = null;
-    DataSource outputDataSource;
-    Processor outputProcessor;
-    ProcessorModel outputPM;
-    DataSink outputDataSink;
-    MediaLocator outputLocator;
+    private Vector sourcesURLs = new Vector(1);
+    private Processor [] processors = null;
+    private String outputFile = null;
+    private String videoEncoding = "JPEG";
+    private String audioEncoding = "LINEAR";
+    private String outputType = FileTypeDescriptor.QUICKTIME;
+    private DataSource [] dataOutputs = null;
+    private DataSource merger = null;
+    private DataSource outputDataSource;
+    private Processor outputProcessor;
+    private ProcessorModel outputPM;
+    private DataSink outputDataSink;
+    private MediaLocator outputLocator;
     
-    VideoFormat videoFormat = null;
-    AudioFormat audioFormat = null;
+    private VideoFormat videoFormat = null;
+    private AudioFormat audioFormat = null;
 
     /** This parameter is used to stop the
      *  merging loop in the doMerge()

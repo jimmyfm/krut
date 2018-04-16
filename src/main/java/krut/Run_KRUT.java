@@ -1,15 +1,50 @@
 package krut;
-/*
- * Run_KRUT.java
- *
- * Created on den 29 december 2004, 23:00
- */
+
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
+import krut.KRUT_GUI.CapSizeQuery;
+import krut.KRUT_GUI.EncodingProgressBar;
+import krut.KRUT_GUI.FPSQuery;
+import krut.KRUT_GUI.KrutSettings;
+import krut.KRUT_GUI.KrutTimer;
+import krut.KRUT_GUI.OutputText;
+import krut.KRUT_GUI.QualitySlider;
+import krut.KRUT_GUI.SaveFileChooser;
+import krut.KRUT_GUI.SnapShot;
+import krut.KRUT_GUI.SoundQuery;
+import krut.KRUT_Recording.Merge;
+import krut.KRUT_Recording.Sampler;
+import krut.KRUT_Recording.ScreenGrabber;
 
 /**
- * @author jonte
- */
-
-/*
  *  @(#)Run_KRUT.java
  *
  *  Some general comments on this program.
@@ -48,20 +83,10 @@ package krut;
  *  very obvious.
  *
  *  Jonas
+ * @since 29 december 2004, 23:00
+ * 
+ * @author jonte
  */
-
-
-import java.io.*;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.net.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.logging.Logger;
-
-import krut.KRUT_GUI.*;
-import krut.KRUT_Recording.*;
-
 
 /** This is the main class of the program. When the main() method is
  *  run, the following things will be done:<BR><BR>
@@ -457,7 +482,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
      *  @param  The path to the image.
      *  @return The ImageIcon.
      */
-    protected static ImageIcon createImageIcon(String path) {
+    private static final ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = Run_KRUT.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
@@ -485,26 +510,39 @@ public class Run_KRUT implements ActionListener, ItemListener {
          *  activeButton, when it is waiting for recording
          *  to start.
          */
-        recButton = makeNavigationButton("mellan7.PNG", RECORD,
-                "Start recording",
-                "Rec ");
+		recButton = makeNavigationButton("mellan7.PNG", RECORD, "Start recording", "Rec ", null);
 
         /** Create the active button. This button will be changed
          *  when recording stops and starts to either reflect the
          *  recButton or the stopButton.
          */
-        activeButton = makeNavigationButton("mellan7.PNG", RECORD,
-                "Start recording",
-                "Rec ");
+		activeButton = makeNavigationButton("mellan7.PNG", RECORD, "Start recording", "Rec ", evt -> {
+			if (!recording) {
+				recording = true;
+				recordAction();
+			} else if (recording && !stopping) { 
+				/**
+				 * If the stop button is clicked, start by disabling this method to prevent an
+				 * eventual second click from launching another StopThread.
+				 */
+				stopping = true;
+				/**
+				 * Start a new thread to handle the encoding of the movie, using low priority.
+				 * In the course of this thread, the GUI is restored, and by the end of the
+				 * thread everything is back to normal.
+				 */
+				StopThread stopThread = new StopThread();
+				stopThread.setPriority(Thread.MIN_PRIORITY);
+				stopThread.start();
+			}
+		});
 
         /** Add first button (activeButton). */
         toolBar.add(activeButton);
 
         /** Create the snapshotButton and add it to the JToolBar.
          */
-        snapshotButton = makeNavigationButton("blue6.PNG", SNAPSHOT,
-                "Take screenshot",
-                " Snap");
+		snapshotButton = makeNavigationButton("blue6.PNG", SNAPSHOT, "Take screenshot", " Snap", evt -> snapAction());
 
         /** Add second button (snapshotButton). */
         toolBar.add(snapshotButton);
@@ -513,9 +551,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
          *  JToolBar, but will serve as a template for the
          *  activeButton, when it is in record mode.
          */
-        stopButton = makeNavigationButton("stop.PNG", STOP,
-                "Stop recording",
-                "Stop");
+		stopButton = makeNavigationButton("stop.PNG", STOP, "Stop recording", "Stop", null);
         stopButton.setSize(recButton.getSize());
 
         /** Create a timerButton. This will not be added to the
@@ -524,7 +560,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
          */
         timerButton = makeNavigationButton("timer.PNG", TIMER,
                 "The timer is active",
-                "Timer");
+                "Timer", this);
 
         /** Create a timerRecButton. This will not be added to the
          *  JToolBar, but will serve as a template for the
@@ -532,13 +568,13 @@ public class Run_KRUT implements ActionListener, ItemListener {
          */
         timerRecButton = makeNavigationButton("timer_running.PNG", TIMER,
                 "The timer is recording",
-                "Timer");
+                "Timer", this);
 
         /** Create the mouse pointer button.
          */
         mouseButton = makeNavigationButton("mus.PNG", MPOINTER,
                 "Select capture area with mouse and CTRL button",
-                "");
+                "", this);
 
         /** Add the key listener and the focus listener to the
          *  mouse pointer button.
@@ -633,31 +669,30 @@ public class Run_KRUT implements ActionListener, ItemListener {
      *  @param  toolTipText     The tooltip text for this button.
      *  @param  altText         The text that should be typed on
      *                          this button, if any.
+     * @param listener 
      *
      *  @return A JButton according to the specifications
      *              given in the parameters.
      */
-    protected JButton makeNavigationButton(String imageName,
+    private static final JButton makeNavigationButton(String imageName,
                                            String actionCommand,
                                            String toolTipText,
-                                           String altText) {
+                                           String altText, ActionListener listener) {
 
         /** Attempt to locate the image */
-        String imgLocation = imageName;
-        URL imageURL = Run_KRUT.class.getResource(imgLocation);
+        URL imageURL = Run_KRUT.class.getResource(imageName);
 
         /** Create and initialize the button. */
         JButton button = new JButton();
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
-        button.addActionListener(this);
+        button.addActionListener(listener);
 
         /** Add the image if it was succesfully located. */
         if (imageURL != null) {
             button.setIcon(new ImageIcon(imageURL, altText));
         } else {
-            System.err.println("Resource not found: "
-                    + imgLocation);
+			System.err.println("Resource not found: " + imageName);
         }
 
         /** Set a text on the button. If there is no String
@@ -739,12 +774,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
      *                      not.
      */
     public void setTimerGUI(boolean recording) {
-        JButton setButton;
-        if (recording) {
-            setButton = timerRecButton;
-        } else {
-            setButton = timerButton;
-        }
+        JButton setButton = recording?timerRecButton:timerButton;
         switchActiveButton(setButton);
     }
 
@@ -803,8 +833,6 @@ public class Run_KRUT implements ActionListener, ItemListener {
      *  ActionEvent to separate them. It is therefore
      *  important that the buttons and menu items are
      *  given a proper ActionCommand.
-     *
-     *  @param  e   The ActionEvent for this Action.
      */
     public void actionPerformed(ActionEvent e) {
 
@@ -812,12 +840,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
         String cmd = e.getActionCommand();
 
         /** First we check if one of the buttons has been pressed. */
-        if (RECORD.equals(cmd)) {
-            recording = true;
-            recordAction();
-        } else if (SNAPSHOT.equals(cmd)) {
-            snapAction();
-        } else if (TIMER.equals(cmd)) {
+        if (TIMER.equals(cmd)) {
             timerAction();
         } else if ("Timer active".equals(cmd)) {
             timerActivatedAction();
@@ -827,21 +850,6 @@ public class Run_KRUT implements ActionListener, ItemListener {
             timerStoppedAction();
         } else if ("Special Stop".equals(cmd)) {
             timerStoppedByStopButtonAction();
-        } else if (STOP.equals(cmd) && !stopping) {
-            /** If the stop button is clicked,
-             *  start by disabling this method to prevent
-             *  an eventual second click from launching
-             *  another StopThread.
-             */
-            stopping = true;
-            /** Start a new thread to handle the encoding of the movie,
-             *  using low priority. In the course of this thread,
-             *  the GUI is restored, and by the end of the thread
-             *  everything is back to normal.
-             */
-            StopThread stopThread = new StopThread();
-            stopThread.setPriority(Thread.MIN_PRIORITY);
-            stopThread.start();
         } else if (MPOINTER.equals(cmd)) {
             /** This starts the changing of the capture area
              *  by using the methods for the mouse pointer
@@ -1664,7 +1672,6 @@ public class Run_KRUT implements ActionListener, ItemListener {
         frame.setVisible(true);
     }
 
-
     /**    Main init function.
      *  First the ScreenGrabber and the Sampler are created,
      *  then all classes for the menu bar functions are properly
@@ -1797,17 +1804,14 @@ public class Run_KRUT implements ActionListener, ItemListener {
 //        frame.setVisible(true);
     }
 
-    private static void createAndShowGUI() {
-        logger.info("Creating and showing GUI");
-
-        Run_KRUT newContentPane = new Run_KRUT();
-        try {
-            newContentPane.init();
-        } catch (IOException e) {
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        createAndShowGUI();
-    }
+	public static void main(String[] args) {
+		
+		logger.info("Starting...");
+		Run_KRUT newContentPane = new Run_KRUT();
+		try {
+			newContentPane.init();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

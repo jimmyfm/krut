@@ -1,30 +1,27 @@
-/*
- * ScreenGrabber.java
- *
- * Created on den 29 december 2004, 23:45
- */
-
 package krut.KRUT_Recording;
 
-/**
- *
- * @author  jonte
- */
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.imageio.*;
-import java.net.*;
-
+import krut.Settings;
 import krut.Migration.JPEGCodec;
 import krut.Migration.JPEGEncodeParam;
 import krut.Migration.JPEGImageEncoder;
-import krut.Settings;
 
 /** This class is used both to record a movie and to take
  *  separate screen shots. The movie is recorded into a temporary
@@ -46,6 +43,9 @@ import krut.Settings;
  *  The present also handles the updating of the preview window,
  *  and the movements of the capture area when the mouse is being
  *  followed.
+ *  
+ * @since	29 december 2004, 23:45
+ * @author  jonte
  */
 public class ScreenGrabber extends Thread {
     /** The video encoding quality. The value of this parameter will be
@@ -306,7 +306,8 @@ public class ScreenGrabber extends Thread {
      *  value for avgCapSize set up.
      *  Then setup outfiles.
      */
-    public ScreenGrabber() {
+    @Deprecated // XXX Unused
+    private ScreenGrabber() {
         this(15);
     }
     
@@ -988,6 +989,7 @@ public class ScreenGrabber extends Thread {
      *	flag to true, and then calls ScreenGrabber.wakeUp(). It is
      *	stopped when the user sets the notFinished flag to false.
      */
+    @Override
     public void run() {
         /** The polygon to draw the mouse cursor into */
         Polygon mousePointer;

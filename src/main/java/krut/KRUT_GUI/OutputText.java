@@ -1,25 +1,19 @@
-/*
- * OutputText.java
- *
- * Created on den 29 december 2004, 23:11
- */
-
 package krut.KRUT_GUI;
 
-/**
- *
- * @author  jonte
- */
+import java.awt.BorderLayout;
+import java.awt.Container;
 
-import java.awt.*;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /** This class is a very simple output window.
  *  The out() method is used to print lines
  *  of text.
+ *  
+ *  @since 29 december 2004, 23:11
+ *  @author  jonte
  */
 public class OutputText  {
     
@@ -81,7 +75,7 @@ public class OutputText  {
         try {
             wait();
         } catch (InterruptedException ie) {
-            System.err.println(ie);
+        	ie.printStackTrace();
         }
     }
     

@@ -1,13 +1,13 @@
 package krut;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
-public class OpenUrlActionListener implements ActionListener {
+public final class OpenUrlActionListener implements ActionListener {
 
     private final static Logger logger = Logger.getLogger(OpenUrlActionListener.class.getName());
 
