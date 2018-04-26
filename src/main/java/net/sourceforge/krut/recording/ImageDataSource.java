@@ -72,4 +72,3 @@ public class ImageDataSource extends PullBufferDataSource {
         return null;
     }
 }
-    

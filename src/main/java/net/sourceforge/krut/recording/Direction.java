@@ -10,13 +10,11 @@ package net.sourceforge.krut.recording;
  * getDirectionEdgeIntersection() methods.
  */
 public class Direction {
-    /**
-     * The x component of the direction.
-     */
-    public final double x;
-    /**
-     * The y component of the direction.
-     */
+	
+	/** The x component of the direction. */
+	public final double x;
+
+	/** The y component of the direction. */
     public final double y;
 
     /**
@@ -26,14 +24,13 @@ public class Direction {
      * @param x The x-component of the Direction.
      * @param y The y-component of the Direction.
      */
-    Direction(final double x, final double y) {
+    public Direction(final double x, final double y) {
         this.x = x;
         this.y = y;
     }
 
     /**
-     * A method to take two integer components, and return a normalized
-     * Direction.
+     * A method to take two integer components, and return a normalized Direction.
      *
      * @param x The x-component of the direction.
      * @param y The y-component of the direction.

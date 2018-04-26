@@ -15,8 +15,6 @@ import javax.media.protocol.PullBufferStream;
 public class ImageSourceStream implements PullBufferStream {
 
     private DataList JPGImages;
-    private int width;
-    private int height;
     private VideoFormat format;
     private float frameRate;
     private long seqNo = 0;
@@ -24,8 +22,6 @@ public class ImageSourceStream implements PullBufferStream {
     private boolean ended = false;
 
     public ImageSourceStream(int width, int height, int frameRate, DataList data) {
-        this.width = width;
-        this.height = height;
         this.frameRate = (float) frameRate;
         this.JPGImages = data;
             

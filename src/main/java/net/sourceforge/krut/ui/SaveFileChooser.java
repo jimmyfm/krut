@@ -84,15 +84,15 @@ public class SaveFileChooser extends JPanel implements ActionListener {
         
         // create the three buttons.
         movieButton = new JButton("Browse",
-                createImageIcon("images/Save16.gif"));
+                createImageIcon("../images/Save16.gif"));
         movieButton.addActionListener(this);
         
         audioButton = new JButton("Browse",
-                createImageIcon("images/Save16.gif"));
+                createImageIcon("../images/Save16.gif"));
         audioButton.addActionListener(this);
         
         imageButton = new JButton("Browse",
-                createImageIcon("images/Save16.gif"));
+                createImageIcon("../images/Save16.gif"));
         imageButton.addActionListener(this);
         
         JLabel movieLabel = new JLabel("Movie file");

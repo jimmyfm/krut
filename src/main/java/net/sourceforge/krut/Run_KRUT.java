@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
@@ -30,6 +29,10 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import net.sourceforge.krut.events.EventBus;
+import net.sourceforge.krut.events.EventListener;
+import net.sourceforge.krut.events.RecButtonClickEvent;
+import net.sourceforge.krut.events.SnapButtonClickEvent;
 import net.sourceforge.krut.recording.Merge;
 import net.sourceforge.krut.recording.Sampler;
 import net.sourceforge.krut.recording.ScreenGrabber;
@@ -38,6 +41,7 @@ import net.sourceforge.krut.ui.EncodingProgressBar;
 import net.sourceforge.krut.ui.FPSQuery;
 import net.sourceforge.krut.ui.KrutSettings;
 import net.sourceforge.krut.ui.KrutTimer;
+import net.sourceforge.krut.ui.NavigationButton;
 import net.sourceforge.krut.ui.OutputText;
 import net.sourceforge.krut.ui.QualitySlider;
 import net.sourceforge.krut.ui.SaveFileChooser;
@@ -437,10 +441,8 @@ public class Run_KRUT implements ActionListener, ItemListener {
         menu.add(menuItem);
 
         /** Add output window menu item. */
-        menuItem = new JMenuItem("Show output window",
-                KeyEvent.VK_H);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_7, ActionEvent.ALT_MASK));
+		menuItem = new JMenuItem("Show output window", KeyEvent.VK_H);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_7, ActionEvent.ALT_MASK));
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
@@ -510,13 +512,13 @@ public class Run_KRUT implements ActionListener, ItemListener {
          *  activeButton, when it is waiting for recording
          *  to start.
          */
-		recButton = makeNavigationButton("mellan7.PNG", RECORD, "Start recording", "Rec ", null);
+		recButton = new NavigationButton("../mellan7.PNG", RECORD, "Start recording", "Rec ");
 
         /** Create the active button. This button will be changed
          *  when recording stops and starts to either reflect the
          *  recButton or the stopButton.
          */
-		activeButton = makeNavigationButton("mellan7.PNG", RECORD, "Start recording", "Rec ", evt -> {
+		activeButton = new NavigationButton("../mellan7.PNG", RECORD, "Start recording", "Rec ", evt -> {
 			if (!recording) {
 				recording = true;
 				recordAction();
@@ -542,7 +544,7 @@ public class Run_KRUT implements ActionListener, ItemListener {
 
         /** Create the snapshotButton and add it to the JToolBar.
          */
-		snapshotButton = makeNavigationButton("blue6.PNG", SNAPSHOT, "Take screenshot", " Snap", evt -> snapAction());
+		snapshotButton = new NavigationButton("../blue6.PNG", SNAPSHOT, "Take screenshot", " Snap", SnapButtonClickEvent::new);
 
         /** Add second button (snapshotButton). */
         toolBar.add(snapshotButton);
@@ -551,30 +553,24 @@ public class Run_KRUT implements ActionListener, ItemListener {
          *  JToolBar, but will serve as a template for the
          *  activeButton, when it is in record mode.
          */
-		stopButton = makeNavigationButton("stop.PNG", STOP, "Stop recording", "Stop", null);
+		stopButton = new NavigationButton("../stop.PNG", STOP, "Stop recording", "Stop");
         stopButton.setSize(recButton.getSize());
 
         /** Create a timerButton. This will not be added to the
          *  JToolBar, but will serve as a template for the
          *  activeButton, when it is in timer mode.
          */
-        timerButton = makeNavigationButton("timer.PNG", TIMER,
-                "The timer is active",
-                "Timer", this);
+		timerButton = new NavigationButton("../timer.PNG", TIMER, "The timer is active", "Timer", this);
 
         /** Create a timerRecButton. This will not be added to the
          *  JToolBar, but will serve as a template for the
          *  activeButton, when it is in timer mode.
          */
-        timerRecButton = makeNavigationButton("timer_running.PNG", TIMER,
-                "The timer is recording",
-                "Timer", this);
+		timerRecButton = new NavigationButton("../timer_running.PNG", TIMER, "The timer is recording", "Timer", this);
 
         /** Create the mouse pointer button.
          */
-        mouseButton = makeNavigationButton("mus.PNG", MPOINTER,
-                "Select capture area with mouse and CTRL button",
-                "", this);
+		mouseButton = new NavigationButton("../mus.PNG", MPOINTER, "Select capture area with mouse and CTRL button", "", this);
 
         /** Add the key listener and the focus listener to the
          *  mouse pointer button.
@@ -655,54 +651,6 @@ public class Run_KRUT implements ActionListener, ItemListener {
         }
     }
 
-    /** Creates a navigation button of the specified
-     *  appearance, and returns it.
-     *
-     *  @param  imageName       A String representation of the URL
-     *                          to an image that should be displayed
-     *                          on this button.
-     *  @param  actionCommand   The action command for this button.
-     *                          This command is listened for in
-     *                          the actionPerformed(ActionEvent e)
-     *                          method, to determine which button
-     *                          was pressed.
-     *  @param  toolTipText     The tooltip text for this button.
-     *  @param  altText         The text that should be typed on
-     *                          this button, if any.
-     * @param listener 
-     *
-     *  @return A JButton according to the specifications
-     *              given in the parameters.
-     */
-    private static final JButton makeNavigationButton(String imageName,
-                                           String actionCommand,
-                                           String toolTipText,
-                                           String altText, ActionListener listener) {
-
-        /** Attempt to locate the image */
-        URL imageURL = Run_KRUT.class.getResource(imageName);
-
-        /** Create and initialize the button. */
-        JButton button = new JButton();
-        button.setActionCommand(actionCommand);
-        button.setToolTipText(toolTipText);
-        button.addActionListener(listener);
-
-        /** Add the image if it was succesfully located. */
-        if (imageURL != null) {
-            button.setIcon(new ImageIcon(imageURL, altText));
-        } else {
-			System.err.println("Resource not found: " + imageName);
-        }
-
-        /** Set a text on the button. If there is no String
-         *  or an empty String in the parameter altText
-         *  no text will appear on the button.
-         */
-        button.setText(altText);
-
-        return button;
-    }
 
     /** This method delivers the size that the activeButton
      *  parameter should have. This method is used by
@@ -973,7 +921,8 @@ public class Run_KRUT implements ActionListener, ItemListener {
 
 
     /** This method takes the snapshot */
-    private void snapAction() {
+    @EventListener
+    public void listenSnapAction(SnapButtonClickEvent evt) {
         /** This changes video settings and file names. */
         checkInited();
         /** Take the snapshot */
@@ -1803,15 +1752,8 @@ public class Run_KRUT implements ActionListener, ItemListener {
          */
 //        frame.setVisible(true);
     }
-
-	public static void main(String[] args) {
-		
-		logger.info("Starting...");
-		Run_KRUT newContentPane = new Run_KRUT();
-		try {
-			newContentPane.init();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    
+    public Run_KRUT() {
+		EventBus.get().register(this);
 	}
 }

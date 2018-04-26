@@ -316,7 +316,7 @@ public class KrutSettings extends javax.swing.JFrame {
 
         capSizePanel.setBorder(new javax.swing.border.TitledBorder("Capture Area"));
         try {
-            jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/krut/mus.PNG")));
+            jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("../mus.PNG")));
         } catch (NullPointerException ne) {
             System.out.println("Image missing");
         }
@@ -551,7 +551,7 @@ public class KrutSettings extends javax.swing.JFrame {
         videoPanel.add(fpsQueryPanel, gridBagConstraints);
 
         try {
-            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/krut/KRUT_GUI/images/kurt_test4.PNG")));
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("../images/kurt_test4.PNG")));
         } catch (NullPointerException ne) {
             System.out.println("Image missing");
         }
@@ -760,7 +760,7 @@ public class KrutSettings extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         logoPanel.add(jFormattedTextField3, gridBagConstraints);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/krut/logo.PNG")));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("../logo.PNG")));
         jButton2.setBorder(null);
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
